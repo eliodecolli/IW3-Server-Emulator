@@ -1,0 +1,10 @@
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\bin\Debug\MasterPlatform.exe.config
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\bin\Debug\MasterPlatform.exe
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\bin\Debug\MasterPlatform.pdb
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\bin\Debug\HNPL.dll
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\obj\Debug\MasterPlatform.csprojResolveAssemblyReference.cache
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\obj\Debug\MasterPlatform.exe
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\obj\Debug\MasterPlatform.pdb
+C:\Users\Elio\Dropbox\Public\MasterPlatform\MasterPlatform\bin\Debug\MasterPlatform.exe.config
+C:\Users\Elio\Dropbox\Public\MasterPlatform\MasterPlatform\obj\Debug\MasterPlatform.exe
+C:\Users\Elio\Dropbox\Public\MasterPlatform\MasterPlatform\obj\Debug\MasterPlatform.pdb

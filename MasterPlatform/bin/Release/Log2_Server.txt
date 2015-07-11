@@ -1,0 +1,15 @@
+2015-07-11 18:06:11 - ChanllegeServer: DEBUG: Challenge server is now running!
+2015-07-11 18:06:11 - WelcomeServer: DEBUG: Welcome server is now running!
+2015-07-11 18:06:16 - ThreadHelper: INFO: ????getservers 6 full empty
+2015-07-11 18:06:16 - LazyAsyncResult: INFO: Sending message to client! [GT-SERVERS]
+2015-07-11 18:06:22 - ThreadHelper: INFO: ????getservers 6 full empty
+2015-07-11 18:06:22 - LazyAsyncResult: INFO: Sending message to client! [GT-SERVERS]
+2015-07-11 18:06:35 - ThreadHelper: INFO: ????heartbeat COD-4
+
+2015-07-11 18:06:35 - ChanllegeServer: INFO: Sending challange data to 127.0.0.1:28960...
+2015-07-11 18:06:35 - LazyAsyncResult: INFO: Sending message to client! [GT-STS]
+2015-07-11 18:06:35 - ThreadHelper: INFO: ????challengeResponse 491679761
+2015-07-11 18:06:48 - ThreadHelper: INFO: ????getservers 6 full empty
+2015-07-11 18:06:48 - LazyAsyncResult: INFO: Sending message to client! [GT-SERVERS]
+2015-07-11 18:07:02 - ThreadHelper: INFO: ????heartbeat flatline
+

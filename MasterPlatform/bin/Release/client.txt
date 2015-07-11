@@ -1,0 +1,23 @@
+g_antilag:1
+g_gametype:tdm
+gamename:Call of Duty 2
+mapname:mp_farmhouse
+protocol:118
+scr_friendlyfire:0
+scr_killcam:1
+shortversion:1.3
+sv_allowAnonymous:0
+sv_floodProtect:1
+sv_hostname:CoD2Host
+sv_maxclients:20
+sv_maxPing:100
+sv_maxRate:0
+sv_minPing:0
+sv_privateClients:0
+sv_punkbuster:0
+sv_pure:0
+sv_voice:0
+challenge:200
+pswrd:0
+mod:1
+

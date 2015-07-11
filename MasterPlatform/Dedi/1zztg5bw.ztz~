@@ -1,0 +1,180 @@
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.IO;
+using System.Net;
+using System.Net.Sockets;
+using System.Threading;
+
+namespace MasterPlatform.Dedi
+{
+    public class DedicatedClient
+    {
+        public Dictionary<string, string> Configuration = new Dictionary<string, string>();
+        public IPEndPoint IP;
+
+        public DedicatedClient(string source, IPEndPoint ip)
+        {
+            string[] parts = source.Split('\\');
+            List<string> keys = new List<string>();
+            List<string> vals = new List<string>();
+            for(int i = 1; i < parts.Length; i++)
+            {
+                if (i % 2 == 1)
+                {
+                    keys.Add(parts[i]);
+                }
+                else
+                    vals.Add(parts[i]);
+            }
+            if (keys.Count == vals.Count)
+            {
+                for (int i = 0; i < keys.Count; i++)
+                {
+                    Configuration.Add(keys[i], vals[i]);
+                }
+            }
+            else
+                Log2.Error("Couldn't properly parse client info.");
+            IP = ip;
+        }
+
+        public void Dump()
+        {
+            StringBuilder strb = new StringBuilder();
+            foreach (var v in Configuration)
+                strb.AppendLine(v.Key + ":" + v.Value);
+            string f = strb.ToString();
+            File.WriteAllText("client.txt", f);
+        }
+    }
+
+    public class ChanllegeServer
+    {
+        UdpClient udp = new UdpClient(20710);
+        List<DedicatedClient> OnlineServers = new List<DedicatedClient>();
+
+        void Done(IAsyncResult state)
+        {
+            Log2.Info("Sending message to client! [" + state.AsyncState.ToString() + "]");
+        }
+
+        void xrun()
+        {
+            while (true)
+            {
+                IPEndPoint clientIP = new IPEndPoint(IPAddress.Any, 20710);
+                byte[] data = udp.Receive(ref clientIP);
+                MemoryStream memsr = new MemoryStream(data);
+                BinaryReader reader = new BinaryReader(memsr);
+                if(data.Length > 4)
+                {
+                    reader.ReadInt32(); // Clear the header...
+                    string type = Encoding.ASCII.GetString(reader.ReadBytes(data.Length - 4));
+                    Log2.Data(type);
+                    if (type.Contains("heartbeat"))
+                    {
+                        if(!type.Contains("flatline"))  //We still on...
+                        {
+                            MemoryStream gsts = new MemoryStream();
+                            BinaryWriter w = new BinaryWriter(gsts);
+                            w.Write(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });
+                            w.Write("getstatus");
+                            w.Flush();
+                            byte[] bdata = gsts.ToArray();
+                            udp.BeginSend(bdata, bdata.Length, clientIP, new AsyncCallback(Done), "GT-STS");
+                        }
+                        else
+                        {
+                            var cs = from cl in OnlineServers where cl.IP == clientIP select cl;
+                            if (cs.Count() > 0)
+                            {
+                                Log2.Info("Client [" + cs.First().Configuration["sv_hostname"] + "] has been disconnected!");
+                                OnlineServers.Remove(cs.First());  // Server removed!
+                            }
+                        }
+                    }
+                    if (type.Contains("statusResponse"))
+                    {
+                        var cs = from cl in OnlineServers where cl.IP == clientIP select cl;
+                        if (cs.Count() > 0)
+                        {
+                            int index = OnlineServers.IndexOf(cs.First());
+                            OnlineServers[index] = new DedicatedClient(type, clientIP);
+                            Log2.Info("Client [" + OnlineServers[index].Configuration["sv_hostname"] + "] has been updated.");
+                        }
+                        else
+                        {
+                            DedicatedClient dc = new DedicatedClient(type, clientIP);
+                            OnlineServers.Add(dc);
+                            Log2.Info("Connected client [" + dc.Configuration["sv_hostname"] + "].");
+                        }
+
+                        //BUILD UP THE CHANLLENGE!
+                        MemoryStream memsr2 = new MemoryStream();
+                        BinaryWriter writer = new BinaryWriter(memsr2);
+                        writer.Write(new byte[] { 0xFF, 0xFF, 0xFF, 0xFF });  //Header
+                        int chanllenge = new Random().Next();
+                        writer.Write("getchallenge");
+                        writer.Write(new byte[] { 0x02, 0x2D });
+                        writer.Write(chanllenge);
+                        writer.Flush();
+                        byte[] fres = memsr2.ToArray();
+                        udp.BeginSend(fres, fres.Length, clientIP, new AsyncCallback(Done), "CHG-RES-" + chanllenge.ToString());  // done with the chanllage shit!
+                    }
+                    if(type.Contains("challengeResponse"))
+                    {
+                        //byte[] fres = Encoding.ASCII.GetBytes("connectResponse");
+                        long chng = long.Parse(type.Split(' ')[1]);
+                        MemoryStream memsr2 = new MemoryStream();
+                        BinaryWriter writer = new BinaryWriter(memsr2);
+                        writer.Write(new byte[] { 0x00, 0xFF, 0xFF, 0xFF, 0xFF });  //Header 2
+                        writer.Write("getstatus");
+                        writer.Write(new byte[] { 0x02, 0x2D });
+                        writer.Write(chng);
+                        writer.Write(0x00);
+                        writer.Flush();
+                        byte[] fres = memsr2.ToArray();
+                        memsr2.Dispose(); //Stack saver?
+                        udp.BeginSend(fres, fres.Length, clientIP, new AsyncCallback(Done), "STS-REQ-" + chng.ToString());  // done with the chanllage shit!
+                    }
+                    if(type.Contains("getservers"))
+                    {
+                        if(type.Split(' ')[1] == "118")  //Must be same protocol!
+                        {
+                            MemoryStream back = new MemoryStream();
+                            BinaryWriter wr = new BinaryWriter(back);
+                            if(OnlineServers.Count > 0)
+                            {
+                                foreach (var cl in OnlineServers)
+                                {
+                                    int ip = (int)cl.IP.Address.Address;  //Erm why use this? Anyways..
+                                    short port = (short)cl.IP.Port;
+                                    wr.Write(ip);
+                                    wr.Write(port);
+                                    wr.Write("\\");
+                                }
+                            }
+                            wr.Write("\\EOT");
+                            wr.Flush();
+                            byte[] servs = back.ToArray();
+                            udp.BeginSend(servs, servs.Length, clientIP, new AsyncCallback(Done), "GT-SERVERS");
+                        }
+                    }
+                }
+                else
+                {
+                    Log2.Data("Unkown packet?");
+                }
+            }
+        }
+
+        public void Start()
+        {
+            Log2.Debug("Challenge server is now running!");
+            new Thread(xrun).Start();
+        }
+    }
+}

@@ -1,0 +1,13 @@
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\bin\Release\MasterPlatform.exe.config
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\bin\Release\MasterPlatform.exe
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\bin\Release\MasterPlatform.pdb
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\bin\Release\HNPL.dll
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\obj\Release\MasterPlatform.csprojResolveAssemblyReference.cache
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\obj\Release\MasterPlatform.exe
+D:\projects\Projects and stuff\New folder\teamwork\MasterPlatform\MasterPlatform\obj\Release\MasterPlatform.pdb
+C:\Users\Elio\Dropbox\Public\MasterPlatform\MasterPlatform\bin\Release\MasterPlatform.exe.config
+C:\Users\Elio\Dropbox\Public\MasterPlatform\MasterPlatform\obj\Release\MasterPlatform.exe
+C:\Users\Elio\Dropbox\Public\MasterPlatform\MasterPlatform\obj\Release\MasterPlatform.pdb
+C:\Users\Elio\Dropbox\Public\MasterPlatform\MasterPlatform\bin\Release\MasterPlatform.exe
+C:\Users\Elio\Dropbox\Public\MasterPlatform\MasterPlatform\bin\Release\MasterPlatform.pdb
+C:\Users\Elio\Dropbox\Public\MasterPlatform\MasterPlatform\obj\Release\MasterPlatform.csprojResolveAssemblyReference.cache
